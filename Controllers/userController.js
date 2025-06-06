@@ -59,16 +59,70 @@ export const login = async (req, res) => {
   }
 };
 
+// export const getAllUsers = async (req, res) => {
+//   try {
+//     // Get pagination parameters from query string
+//     const page = parseInt(req.query.page) || 1;
+//     const limit = parseInt(req.query.limit) || 10;
+//     const skip = (page - 1) * limit;
+
+//     // Get total count for pagination info
+//     const totalUsers = await prisma.user.count();
+
+//     const users = await prisma.user.findMany({
+//       select: {
+//         id: true,
+//         username: true,
+//         email: true,
+//         createdAt: true,
+//         updatedAt: true,
+//         _count: {
+//           notes: true
+//         }
+//       },
+//       orderBy: {
+//         createdAt: 'desc'
+//       },
+//       skip: skip,
+//       take: limit
+//     });
+
+//     const totalPages = Math.ceil(totalUsers / limit);
+
+//     res.status(200).json({
+//       message: 'Users retrieved successfully',
+//       pagination: {
+//         currentPage: page,
+//         totalPages: totalPages,
+//         totalUsers: totalUsers,
+//         usersPerPage: limit,
+//         hasNextPage: page < totalPages,
+//         hasPrevPage: page > 1
+//       },
+//       users
+//     });
+//   } catch (error) {
+//     console.error('Get all users error:', error);
+//     res.status(500).json({ error: 'Failed to fetch users' });
+//   }
+// };
+
 export const getUserProfile = async (req, res) => {
   const userId = req.user.id;
-  console.log(userId, 'userId');
   try {
     const user = await prisma.user.findUnique({
       where: { id: userId },
+      select: {
+        id: true,
+        username: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+        _count: {
+          notes: true
+        }
+      }
     });
-    if (!user) {
-      return res.status(404).json({ error: 'User not found' });
-    }
     res.json({ user });
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch user profile' });

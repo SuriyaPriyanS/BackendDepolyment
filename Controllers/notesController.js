@@ -64,9 +64,24 @@ export const updateNote = async (req, res) => {
 // Delete a note by ID
 export const deleteNote = async (req, res) => {
   const { id } = req.params;
+  const userId = req.user.id;
+  console.log(id, 'id');
+    console.log(userId, 'userId');
   try {
+    const note = await prisma.note.findUnique({
+      where: { id: Number(id) }
+    });
+
+    if (!note) {
+      return res.status(404).json({ error: 'Note not found' });
+    }
+
+    
+
     await prisma.note.delete({
-      where: { id: Number(id) },
+      where: { 
+        id: Number(id)
+      }
     });
     res.status(200).send("Note deleted successfully");
   } catch (error) {

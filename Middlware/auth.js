@@ -5,7 +5,9 @@ const prisma = new PrismaClient();
 
 export const authenticateToken = (req, res, next) => {
   const token = req.headers['authorization']?.split(' ')[1];
+  console.log("Token:", token); // Log the token for debugging
   if (!token) return res.sendStatus(401);
+  console.log("user", user);
 
   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
     if (err) return res.sendStatus(403);
@@ -13,6 +15,7 @@ export const authenticateToken = (req, res, next) => {
     next();
   });
 };
+
 
 export const checkUserExists = async (req, res, next) => {
   const userId = req.user.id;
