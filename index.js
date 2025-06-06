@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import notesRouter from './Routers/notesRouter.js';
 import userRouter from './Routers/userRouter.js';
 import { PrismaClient } from '@prisma/client';
+import cors from 'cors'
 
 // import { authMiddleware } from './middleware/auth.js';
 
@@ -12,7 +13,17 @@ const prisma = new PrismaClient(); // Instantiate PrismaClient
 const app = express();
 
 app.use(express.json());
+app.use(cors(
+    {
+        origin: '*', // Allow all origins, you can specify a specific origin if needed
+        methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allow specific HTTP methods
+        allowedHeaders: ['Content-Type', 'Authorization'],
+        credentials: true // Allow credentials if needed
+    }
+)); // Enable CORS for all routes
+
 // app.use(authMiddleware);
+
 
 app.use('/api/notes', notesRouter);
 app.use('/api/users', userRouter)
