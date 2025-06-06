@@ -68,7 +68,7 @@ export const deleteNote = async (req, res) => {
     await prisma.note.delete({
       where: { id: Number(id) },
     });
-    res.status(204).send();
+    res.status(200).send("Note deleted successfully");
   } catch (error) {
     res.status(500).json({ error: 'Failed to delete note' });
   }
